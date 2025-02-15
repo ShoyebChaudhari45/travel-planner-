@@ -1,25 +1,31 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".RouteActivity">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/routeInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Fetching route..."
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:padding="16dp" />
 
-
-    <!-- Small MapView -->
     <com.google.android.gms.maps.MapView
         android:id="@+id/smallMapView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:clickable="true"
-        android:background="@android:color/darker_gray"/>
+        android:layout_below="@id/routeInfo"
+        android:background="@android:color/darker_gray" />
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fullScreenButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/Primary_key"
+        android:contentDescription="Full Screen"
+        android:src="@drawable/ic_fullscreen"
+        android:layout_below="@id/smallMapView" />
+
+</RelativeLayout>

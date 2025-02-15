@@ -3,9 +3,11 @@ package com.example.travel_panner_project;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,15 +32,21 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private RequestQueue requestQueue;
     private GoogleMap mMap;
     private MapView smallMapView;
-    private static final String TAG = "RouteActivity";
+    private FloatingActionButton fullScreenButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Enable full-screen mode
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_route);
 
         routeInfo = findViewById(R.id.routeInfo);
         smallMapView = findViewById(R.id.smallMapView);
+        fullScreenButton = findViewById(R.id.fullScreenButton);
         requestQueue = Volley.newRequestQueue(this);
 
         // Get coordinates from intent
@@ -58,14 +66,17 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         smallMapView.getMapAsync(this);
 
         // Open fullscreen map on click
-        smallMapView.setOnClickListener(v -> {
+        View.OnClickListener openFullScreen = v -> {
             Intent intent = new Intent(RouteActivity.this, MapsActivity.class);
             intent.putExtra("sourceLat", startLat);
             intent.putExtra("sourceLon", startLon);
             intent.putExtra("destLat", endLat);
             intent.putExtra("destLon", endLon);
             startActivity(intent);
-        });
+        };
+
+        smallMapView.setOnClickListener(openFullScreen);
+        fullScreenButton.setOnClickListener(openFullScreen);
     }
 
     @Override
@@ -86,9 +97,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void fetchRoute() {
-        String url = "https://router.project-osrm.org/route/v1/driving/"
-                + startLon + "," + startLat + ";" + endLon + "," + endLat
-                + "?overview=full&geometries=geojson";
+        String url = "https://router.project-osrm.org/route/v1/driving/" +
+                startLon + "," + startLat + ";" + endLon + "," + endLat +
+                "?overview=full&geometries=geojson";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -118,9 +129,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void fetchRouteOnMap() {
-        String url = "https://router.project-osrm.org/route/v1/driving/"
-                + startLon + "," + startLat + ";" + endLon + "," + endLat
-                + "?overview=full&geometries=geojson";
+        String url = "https://router.project-osrm.org/route/v1/driving/" +
+                startLon + "," + startLat + ";" + endLon + "," + endLat +
+                "?overview=full&geometries=geojson";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -144,7 +155,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                     .addAll(routePoints)
                                     .width(5)
                                     .color(Color.BLUE));
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
