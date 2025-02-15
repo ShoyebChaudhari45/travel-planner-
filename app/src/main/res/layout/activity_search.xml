@@ -1,38 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".SearchActivity"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/white">
 
-    <EditText
-        android:id="@+id/sourceField"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Plan Your Trip"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp"
+        android:layout_gravity="center" />
+
+    <AutoCompleteTextView
+        android:id="@+id/sourceInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Source"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:inputType="text"/>
+        android:padding="10dp"
+        android:background="@android:drawable/editbox_background"
+        android:textSize="16sp"
+        android:paddingLeft="8dp"/>
 
-    <EditText
-        android:id="@+id/destinationField"
+    <AutoCompleteTextView
+        android:id="@+id/destinationInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Destination"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:inputType="text"/>
+        android:padding="10dp"
+        android:background="@android:drawable/editbox_background"
+        android:textSize="16sp"
+        android:paddingLeft="8dp"
+        android:layout_marginTop="10dp"/>
 
     <Button
-        android:id="@+id/swapButton"
+        android:id="@+id/btnSwap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Swap"/>
+        android:text="Swap"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:backgroundTint="@color/teal_700"
+        android:textColor="@color/white"/>
 
     <Button
-        android:id="@+id/searchButton"
+        android:id="@+id/btnFindRoutes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Search Transport"/>
+        android:text="Find Routes"
+        android:textAllCaps="false"
+        android:layout_marginTop="20dp"
+        android:padding="12dp"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@color/white"/>
+
 </LinearLayout>

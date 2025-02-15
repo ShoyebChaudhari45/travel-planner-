@@ -1,116 +1,90 @@
 package com.example.travel_panner_project;
 
 import android.content.Intent;
+import android.location.Geocoder;
+import android.location.Address;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.net.URLEncoder;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity {
-    private EditText sourceField, destinationField;
-    private Button swapButton, searchButton;
-    private String sourceLat, sourceLon, destLat, destLon;
-    private RequestQueue requestQueue;
-    private static final String TAG = "SearchActivity"; // For logging
+
+    private AutoCompleteTextView sourceInput, destinationInput;
+    private Button btnFindRoutes, btnSwap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Full-screen mode
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_search);
 
-        sourceField = findViewById(R.id.sourceField);
-        destinationField = findViewById(R.id.destinationField);
-        swapButton = findViewById(R.id.swapButton);
-        searchButton = findViewById(R.id.searchButton);
+        sourceInput = findViewById(R.id.sourceInput);
+        destinationInput = findViewById(R.id.destinationInput);
+        btnFindRoutes = findViewById(R.id.btnFindRoutes);
+        btnSwap = findViewById(R.id.btnSwap);
 
-        requestQueue = Volley.newRequestQueue(this);
-
-        swapButton.setOnClickListener(v -> swapSourceAndDestination());
-        searchButton.setOnClickListener(v -> fetchCoordinatesAndStartRouteActivity());
+        btnFindRoutes.setOnClickListener(v -> searchRoutes());
+        btnSwap.setOnClickListener(v -> swapInputs());
     }
 
-    private void swapSourceAndDestination() {
-        String temp = sourceField.getText().toString();
-        sourceField.setText(destinationField.getText().toString());
-        destinationField.setText(temp);
+    private void swapInputs() {
+        String tempSource = sourceInput.getText().toString();
+        sourceInput.setText(destinationInput.getText().toString());
+        destinationInput.setText(tempSource);
     }
 
-    private void fetchCoordinatesAndStartRouteActivity() {
-        String source = sourceField.getText().toString().trim();
-        String destination = destinationField.getText().toString().trim();
+    private void searchRoutes() {
+        String source = sourceInput.getText().toString();
+        String destination = destinationInput.getText().toString();
 
         if (source.isEmpty() || destination.isEmpty()) {
-            Toast.makeText(this, "Please enter both source and destination", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter both locations", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        fetchCoordinates(source, true);
-        fetchCoordinates(destination, false);
-    }
+        double[] sourceCoordinates = getCoordinates(source);
+        double[] destCoordinates = getCoordinates(destination);
 
-    private void fetchCoordinates(String placeName, boolean isSource) {
-        try {
-            String encodedPlace = URLEncoder.encode(placeName, "UTF-8");
-            String url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodedPlace;
-
-            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                    response -> handleLocationResponse(response, isSource, placeName),
-                    error -> {
-                        Log.e(TAG, "Volley error fetching location: " + error.getMessage());
-                        Toast.makeText(this, "Error fetching location for: " + placeName, Toast.LENGTH_SHORT).show();
-                    });
-
-            requestQueue.add(request);
-        } catch (Exception e) {
-            Log.e(TAG, "Error encoding URL", e);
-            Toast.makeText(this, "Invalid location input", Toast.LENGTH_SHORT).show();
+        if (sourceCoordinates == null || destCoordinates == null) {
+            Toast.makeText(this, "Unable to fetch location data", Toast.LENGTH_SHORT).show();
+            return;
         }
-    }
 
-    private void handleLocationResponse(JSONArray response, boolean isSource, String placeName) {
-        try {
-            if (response.length() > 0) {
-                JSONObject location = response.getJSONObject(0); // Consider showing all options instead
-                String lat = location.getString("lat");
-                String lon = location.getString("lon");
-
-                if (isSource) {
-                    sourceLat = lat;
-                    sourceLon = lon;
-                } else {
-                    destLat = lat;
-                    destLon = lon;
-                }
-
-                if (sourceLat != null && destLat != null) {
-                    startRouteActivity();
-                }
-            } else {
-                Toast.makeText(this, "Location not found: " + placeName, Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error parsing location JSON", e);
-            Toast.makeText(this, "Error processing location data", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void startRouteActivity() {
-        Intent intent = new Intent(this, RouteActivity.class);
-        intent.putExtra("sourceLat", sourceLat);
-        intent.putExtra("sourceLon", sourceLon);
-        intent.putExtra("destLat", destLat);
-        intent.putExtra("destLon", destLon);
+        Intent intent = new Intent(SearchActivity.this, RouteActivity.class);
+        intent.putExtra("sourceCity", source);
+        intent.putExtra("destCity", destination);
+        intent.putExtra("sourceLat", String.valueOf(sourceCoordinates[0]));
+        intent.putExtra("sourceLon", String.valueOf(sourceCoordinates[1]));
+        intent.putExtra("destLat", String.valueOf(destCoordinates[0]));
+        intent.putExtra("destLon", String.valueOf(destCoordinates[1]));
         startActivity(intent);
+    }
+
+    private double[] getCoordinates(String location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(location, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                return new double[]{address.getLatitude(), address.getLongitude()};
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

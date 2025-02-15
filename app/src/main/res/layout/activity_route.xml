@@ -1,31 +1,106 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".RouteActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/routeInfo"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fetching route..."
-        android:textSize="18sp"
-        android:padding="16dp" />
+        android:padding="16dp">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/smallMapView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/routeInfo"
-        android:background="@android:color/darker_gray" />
+        <!-- Route Information -->
+        <TextView
+            android:id="@+id/routeInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fetching route..."
+            android:textSize="18sp"
+            android:padding="16dp"
+            android:textColor="@android:color/black" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fullScreenButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/Primary_key"
-        android:contentDescription="Full Screen"
-        android:src="@drawable/ic_fullscreen"
-        android:layout_below="@id/smallMapView" />
+        <!-- Small Map View -->
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/smallMapView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/routeInfo"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="8dp" />
 
-</RelativeLayout>
+        <!-- Fullscreen Button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fullScreenButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/Primary_key"
+            android:contentDescription="Full Screen"
+            android:src="@drawable/ic_fullscreen"
+            android:layout_below="@id/smallMapView" />
+
+        <!-- Transport Options Label -->
+        <TextView
+            android:id="@+id/transportOptionsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Available Transport Options"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:layout_below="@id/fullScreenButton" />
+
+        <!-- Transport Options Container -->
+        <LinearLayout
+            android:id="@+id/transportOptionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/transportOptionsLabel"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_horizontal">
+
+            <!-- Bus Option -->
+            <!-- Add Bus Option UI Here -->
+
+            <!-- Train Option -->
+            <!-- Add Train Option UI Here -->
+
+            <!-- Taxi Option -->
+            <!-- Add Taxi Option UI Here -->
+
+            <!-- Flight Option -->
+            <!-- Add Flight Option UI Here -->
+
+        </LinearLayout>
+
+        <!-- View Nearby Places Button -->
+        <Button
+            android:id="@+id/btnViewNearbyPlaces"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Nearby Places"
+            android:textSize="16sp"
+            android:layout_below="@id/transportOptionsContainer"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/Primary_key"
+            android:textColor="@android:color/white" />
+
+        <!-- Hotel Booking Button -->
+        <Button
+            android:id="@+id/btnHotelBooking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hotel Booking"
+            android:textSize="16sp"
+            android:layout_below="@id/btnViewNearbyPlaces"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/Primary_key"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+</ScrollView>
