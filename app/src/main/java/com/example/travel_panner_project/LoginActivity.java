@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         String name = documentSnapshot.getString("name");
                         Toast.makeText(LoginActivity.this, "Welcome " + name, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, SearchActivity.class));
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "User data not found", Toast.LENGTH_SHORT).show();

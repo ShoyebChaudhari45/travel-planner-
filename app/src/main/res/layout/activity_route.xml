@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".RouteActivity">
+
+    <TextView
+        android:id="@+id/routeInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fetching route..."
+        android:textSize="18sp"/>
+
+
+    <!-- Small MapView -->
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/smallMapView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:clickable="true"
+        android:background="@android:color/darker_gray"/>
+
+</LinearLayout>
